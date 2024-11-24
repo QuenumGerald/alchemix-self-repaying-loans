@@ -26,7 +26,7 @@ jobs:
           node-version: 22
 
       - name: Install Dependencies
-        run: npm install
+        run: npm ci # `npm ci` is faster and ensures consistency for CI environments
 
       - name: Run Linter
         run: npm run lint
@@ -49,7 +49,7 @@ jobs:
           node-version: 22
 
       - name: Install Dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build Application
         run: npm run build
@@ -58,20 +58,20 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: build
-          path: ./dist # Adjust the path if necessary
+          path: ./dist # Adjust 
 
   deploy-staging:
     name: Deploy to Staging
     runs-on: ubuntu-latest
     needs: build # Only run after build job succeeds
-    if: github.ref == 'refs/heads/dev' # Deploy to staging for pushes to dev
+    if: github.ref == 'refs/heads/dev' # Deploy to staging for pushes to dev branch
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
 
       - name: Deploy to Staging
-        run: npx vercel --prod
+        run: npx vercel --token=$VERCEL_TOKEN --prod
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_STAGING_TOKEN }}
 
@@ -79,13 +79,13 @@ jobs:
     name: Deploy to Production
     runs-on: ubuntu-latest
     needs: build # Only run after build job succeeds
-    if: github.ref == 'refs/heads/main' # Deploy to production for pushes to main
+    if: github.ref == 'refs/heads/main' # Deploy to production for pushes to main branch
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
 
       - name: Deploy to Production
-        run: npx vercel --prod
+        run: npx vercel --token=$VERCEL_TOKEN --prod
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
