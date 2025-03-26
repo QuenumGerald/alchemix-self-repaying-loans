@@ -441,10 +441,7 @@ const App: React.FC = () => {
           });
           return apr;
         } catch (err) {
-          toast.error(`Error fetching APR for asset ${asset}:`, {
-            ...toastConfig,
-            icon: <span aria-label="error">❌</span>,
-          });
+          console.log(err)
           return 'N/A';
         }
       }
