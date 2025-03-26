@@ -104,7 +104,6 @@ const TOKEN_ADDRESSES: { [key: string]: { [chainId: number]: `0x${string}` } } =
     },
 };
 
-const defaultChain = { id: 1 };
 
 const getSynthSymbol = (depositAsset: string): string => {
     const synthMapping: Record<string, string> = {
@@ -140,7 +139,7 @@ export function useAlchemistPosition(depositAsset: DepositAsset | `0x${string}` 
             return;
         }
 
-        const chainId = chain?.id ?? defaultChain.id;
+        const chainId = chain?.id;
 
         if (!isSupportedChainId(chainId)) {
             setPosition(prev => ({

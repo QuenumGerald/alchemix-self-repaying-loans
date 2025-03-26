@@ -34,49 +34,6 @@ export type VaultsConfig = {
 export const VAULTS: VaultsConfig = {
   [mainnet.id]: {
     //alUSD
-    "0xdA816459F1AB5631232FE5e97a05BBBb94970c95": {
-      label: "Yearn yvDAI",
-      synthAssetType: SYNTH_ASSETS.ALUSD,
-      underlyingSymbol: "DAI",
-      yieldSymbol: "yvDAI",
-      image: "yvDAI.svg",
-      messages: [],
-      api: {
-        apr: getYearnApy,
-        yieldType: "APY",
-        provider: "yearn",
-      },
-      disabledDepositTokens: [],
-    },
-    "0xa354F35829Ae975e850e23e9615b11Da1B3dC4DE": {
-      label: "Yearn yvUSDC",
-      synthAssetType: SYNTH_ASSETS.ALUSD,
-      underlyingSymbol: "USDC",
-      yieldSymbol: "yvUSDC",
-      image: "yvUSDC.svg",
-      messages: [],
-      api: {
-        apr: getYearnApy,
-        yieldType: "APY",
-        provider: "yearn",
-      },
-      disabledDepositTokens: [],
-    },/* 
-    "0x7Da96a3891Add058AdA2E826306D812C638D87a7": {
-      label: "Yearn yvUSDT",
-      synthAssetType: SYNTH_ASSETS.ALUSD,
-      underlyingSymbol: "USDT",
-      yieldSymbol: "yvUSDT",
-      image: "yvUSDT.svg",
-      messages: [{ message: "Vault is disabled.", type: "warning" }],
-      api: {
-        apr: getYearnApy,
-        yieldType: "APY",
-        provider: "yearn",
-        bonus: getNoBonus,
-      },
-      disabledDepositTokens: [],
-    }, */
     "0xcE4a49d7ed99C7c8746B713EE2f0C9aA631688d8": {
       label: "AAVE aDAI",
       synthAssetType: SYNTH_ASSETS.ALUSD,
@@ -119,20 +76,6 @@ export const VAULTS: VaultsConfig = {
         apr: getAaveApr,
         yieldType: "APR",
         provider: "aave",
-      },
-      disabledDepositTokens: [],
-    },
-    "0x3B27F92C0e212C671EA351827EDF93DB27cc0c65": {
-      label: "Yearn yvUSDT",
-      synthAssetType: SYNTH_ASSETS.ALUSD,
-      underlyingSymbol: "USDT",
-      yieldSymbol: "yvUSDT",
-      image: "yvUSDT.svg",
-      messages: [],
-      api: {
-        apr: getYearnApy,
-        yieldType: "APY",
-        provider: "yearn",
       },
       disabledDepositTokens: [],
     },
@@ -194,21 +137,7 @@ export const VAULTS: VaultsConfig = {
       disabledDepositTokens: [],
     }, */
     //alETH
-    "0xa258C4606Ca8206D8aA700cE2143D7db854D168c": {
-      label: "Yearn yvWETH",
-      synthAssetType: SYNTH_ASSETS.ALETH,
-      underlyingSymbol: "WETH",
-      yieldSymbol: "yvWETH",
-      image: "yvWETH.svg",
-      messages: [],
-      wethGateway: "0xA22a7ec2d82A471B1DAcC4B37345Cf428E76D67A",
-      api: {
-        apr: getYearnApy,
-        yieldType: "APY",
-        provider: "yearn",
-      },
-      disabledDepositTokens: [],
-    },
+
     "0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0": {
       label: "Lido wstETH",
       synthAssetType: SYNTH_ASSETS.ALETH,

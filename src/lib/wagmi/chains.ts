@@ -34,7 +34,7 @@ export const CONTRACTS = {
     ALCHEMIST: {
       ALUSD: '0x5C6374a2ac4EBC38DeA0Fc1F8716e5Ea1AdD94dd',
       ALETH: '0x062Bf725dC4cDF947aa79Ca2aaCCD4F385b13b5c',
-      USDC: '0xA0b86991C6218b36c1d19D4a2e9Eb0cE3606eB48'
+      USDC: '0x5C6374a2ac4EBC38DeA0Fc1F8716e5Ea1AdD94dd'
     },
     TOKENS: {
       USDC: { token: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', decimals: 6 },
@@ -64,7 +64,7 @@ const mainnetWithRpcs: Chain = {
   ...mainnet,
   rpcUrls: {
     default: {
-      http: ['https://eth.rpc.blxrbdn.com'],
+      http: ['https://mainnet.infura.io/v3/b4476d1d984e4d8cbd5c044bdd6141cd'],
     },
   },
 };
