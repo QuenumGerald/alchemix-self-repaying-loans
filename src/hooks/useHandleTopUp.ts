@@ -128,6 +128,7 @@ export const useHandleTopUp = (): UseHandleTopUpReturn => {
         );
       }
 
+
       // Step 5: Perform top-up operation
       const callbacks: TopUpCallbackConfig = {
         onHashGenerate: (hash) => console.log('Transaction Hash:', hash),
@@ -135,8 +136,8 @@ export const useHandleTopUp = (): UseHandleTopUpReturn => {
       };
 
       await performTopUp(
-        {}, 
-        null, 
+        {},
+        null,
         walletAddress as `0x${string}`,
         depositAsset as `0x${string}`,
         currentChain.name.toLowerCase() as Network,

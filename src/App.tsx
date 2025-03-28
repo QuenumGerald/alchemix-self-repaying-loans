@@ -82,11 +82,38 @@ const App: React.FC = () => {
   const { borrow, isLoading: isBorrowing } = useBorrow();
   const [depositAsset, setDepositAsset] = useState<DepositAsset | `0x${string}` | ''>('');
   const position = useAlchemistPosition(depositAsset);
-  //console.log('Position object:', position);
-  // Ne pas formater le montant déposé pour garder la précision
   const depositedAmount = position.collateral.amount;
 
-  //console.log('Deposited amount:', depositedAmount);
+  // Validation spéciale pour ETH en mode borrow-only
+  const [isValidEthDeposit, setIsValidEthDeposit] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const checkEthDeposit = async () => {
+      if (mode !== 'borrowOnly' || !depositAsset || depositAsset !== '0x0000000000000000000000000000000000000000') {
+        setIsValidEthDeposit(true);
+        return;
+      }
+
+      const { address } = useAccount();
+      const publicClient = usePublicClient();
+
+      if (!address || !publicClient) {
+        setIsValidEthDeposit(false);
+        return;
+      }
+
+      try {
+        const balance = await publicClient.getBalance({ address });
+        const balanceInEth = parseFloat(formatUnits(balance, 18));
+        setIsValidEthDeposit(balanceInEth > 0);
+      } catch (err) {
+        console.error('Error checking ETH balance:', err);
+        setIsValidEthDeposit(false);
+      }
+    };
+
+    checkEthDeposit();
+  }, [mode, depositAsset, useAccount, usePublicClient]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [txDetails, setTxDetails] = useState({
@@ -219,13 +246,13 @@ const App: React.FC = () => {
       const minAmount = parseFloat(minTopUpAmountInEUR);
       const maxAmount = parseFloat(maxTopUpAmountInEUR);
 
-      if (isNaN(minAmount) || isNaN(maxAmount)) {
-        throw new Error('Invalid server settings. Please try again later.');
-      }
-
-      if (amountInEUR < minAmount || amountInEUR > maxAmount) {
-        throw new Error(`Amount must be between ${minAmount} and ${maxAmount} EUR`);
-      }
+      /*       if (isNaN(minAmount) || isNaN(maxAmount)) {
+              throw new Error('Invalid server settings. Please try again later.');
+            }
+      
+            if (amountInEUR < minAmount || amountInEUR > maxAmount) {
+              throw new Error(`Amount must be between ${minAmount} and ${maxAmount} EUR`);
+            } */
 
       console.log('=== BORROW ONLY DETAILS ===');
       console.log('1. Final Amount:', finalAmount);
@@ -293,16 +320,78 @@ const App: React.FC = () => {
       return;
     }
     // For borrow-only mode, validate deposited amount
-    if (mode === 'borrowOnly' && (!depositedAmount || parseFloat(depositedAmount) <= 0)) {
-      console.error('Invalid deposited amount for borrow-only mode.');
-      return;
-    }
-
-    let amount;
     if (mode === 'borrowOnly') {
-      const depositedAmountInEth = parseFloat(formatUnits(depositedAmount, 18));
+      if (isValidEthDeposit === false) {
+        setError('Insufficient ETH balance in your wallet.');
+        return;
+      }
+      if (isValidEthDeposit === null) {
+        setError('Checking ETH balance...');
+        return;
+      }
+
+      // Convertir depositedAmount en nombre
+      let depositedAmountInEth: number | null = null;
+
+      // Vérifier que depositedAmount existe et n'est pas null/undefined
+      if (!depositedAmount) {
+        setError('No deposited amount provided');
+        return;
+      }
+
+      // Vérifier le type de depositedAmount
+      const depositedAmountType = typeof depositedAmount;
+
+      if (depositedAmountType === 'string') {
+        // Si c'est une chaîne, vérifier si c'est déjà un nombre décimal
+        if ((depositedAmount as string).includes('.')) {
+          depositedAmountInEth = parseFloat(depositedAmount as string);
+        } else {
+          // Sinon, c'est probablement un nombre hexadécimal
+          try {
+            depositedAmountInEth = parseFloat(formatUnits(depositedAmount as string, 18));
+          } catch (e) {
+            console.error('Error formatting units:', e);
+            setError('Invalid deposited amount format');
+            return;
+          }
+        }
+      } else if (depositedAmountType === 'bigint') {
+        try {
+          const bigIntValue = BigInt(depositedAmount as unknown as string);
+          depositedAmountInEth = parseFloat(formatUnits(bigIntValue.toString(), 18));
+        } catch (e) {
+          console.error('Error formatting units:', e);
+          setError('Invalid deposited amount format');
+          return;
+        }
+      } else if (depositedAmountType === 'number') {
+        depositedAmountInEth = Number(depositedAmount);
+      }
+
+      if (depositedAmountInEth === null) {
+        setError('Invalid deposited amount format');
+        return;
+      }
+
+      if (isNaN(depositedAmountInEth)) {
+        setError('Invalid deposited amount format');
+        return;
+      }
+
+      if (depositedAmountInEth <= 0) {
+        setError('No active position found on this chain. Please deposit collateral first.');
+        return;
+      }
+
       const maxBorrowableAmount = depositedAmountInEth * 0.5;
-      amount = maxBorrowableAmount * (percentage / 100);
+      let amount = maxBorrowableAmount * (percentage / 100);
+
+      // Limite à 5000 ETH dans tous les cas
+      amount = Math.min(amount, 5000);
+
+      setBorrowAmount(amount.toString());
+
       console.log('Borrow only calculation:', {
         depositedAmount: formatNumberWithoutExponent(parseFloat(depositedAmount)),
         depositedAmountInEth: formatNumberWithoutExponent(depositedAmountInEth),
@@ -312,18 +401,13 @@ const App: React.FC = () => {
       });
     } else {
       const maxBorrowableAmount = parseFloat(depositAmount) * 0.5;
-      amount = maxBorrowableAmount * (percentage / 100);
-    }
+      let amount = maxBorrowableAmount * (percentage / 100);
 
-    // Limite à 5000 ETH dans tous les cas
-    amount = Math.min(amount, 5000);
-    console.log('Calculated borrow amount:', {
-      mode,
-      depositedAmount: mode === 'borrowOnly' ? formatNumberWithoutExponent(parseFloat(depositedAmount)) : depositAmount,
-      percentage,
-      calculatedAmount: formatNumberWithoutExponent(amount)
-    });
-    setBorrowAmount(amount.toString());
+      // Limite à 5000 ETH dans tous les cas
+      amount = Math.min(amount, 5000);
+
+      setBorrowAmount(amount.toString());
+    }
   };
 
   useEffect(() => {
@@ -595,13 +679,13 @@ const App: React.FC = () => {
       const minAmount = parseFloat(minTopUpAmountInEUR);
       const maxAmount = parseFloat(maxTopUpAmountInEUR);
 
-      if (isNaN(minAmount) || isNaN(maxAmount)) {
-        throw new Error('Invalid server settings. Please try again later.');
-      }
-
-      if (amountInEUR < minAmount || amountInEUR > maxAmount) {
-        throw new Error(`Amount must be between ${minAmount} and ${maxAmount} EUR`);
-      }
+      /*       if (isNaN(minAmount) || isNaN(maxAmount)) {
+              throw new Error('Invalid server settings. Please try again later.');
+            }
+      
+            if (amountInEUR < minAmount || amountInEUR > maxAmount) {
+              throw new Error(`Amount must be between ${minAmount} and ${maxAmount} EUR`);
+            } */
 
       // Check if wallet is connected and chain is supported
       if (!publicClient || !walletClient || !chain || !address) {
@@ -1350,7 +1434,7 @@ const App: React.FC = () => {
                 </div>
                 {mode === 'topup' && (
                   <div style={{ textAlign: 'left', marginTop: '10px', marginBottom: '0px', color: '#979BA2', fontSize: '0.9em' }}>
-                    Deposit into an Alchemix vault and take a loan to top-up your Holyheld Card.<br />
+                    Deposit into an Alchemix vault and take a Loan to top-up your Holyheld card.<br />
                     <br />
                     1. Tag your HolyHeld card.<br />
                     2. Select your deposit asset and amount.<br />

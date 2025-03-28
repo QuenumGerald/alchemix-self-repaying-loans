@@ -8,7 +8,6 @@ import { SupportedChainId } from "../../lib/wagmi/wagmiConfig";
 import { VaultMetadata } from "../../lib/config/metadataTypes";
 import { getYearnApy } from "../../lib/middleware/yearn";
 import { getAaveApr } from "../../lib/middleware/aave";
-import { getVesperApr } from "../../lib/middleware/vesper";
 import { getRocketApr } from "../../lib/middleware/rocketPool";
 import { getLidoApy } from "../../lib/middleware/lido";
 
@@ -76,34 +75,6 @@ export const VAULTS: VaultsConfig = {
         apr: getAaveApr,
         yieldType: "APR",
         provider: "aave",
-      },
-      disabledDepositTokens: [],
-    },
-    "0xa8b607Aa09B6A2E306F93e74c282Fb13f6A80452": {
-      label: "Vesper vaUSDC",
-      synthAssetType: SYNTH_ASSETS.ALUSD,
-      underlyingSymbol: "USDC",
-      yieldSymbol: "vaUSDC",
-      image: "vaUSDC.svg",
-      messages: [],
-      api: {
-        apr: getVesperApr,
-        yieldType: "APR",
-        provider: "vesper",
-      },
-      disabledDepositTokens: [],
-    },
-    "0x0538C8bAc84E95A9dF8aC10Aad17DbE81b9E36ee": {
-      label: "Vesper vaDAI",
-      synthAssetType: SYNTH_ASSETS.ALUSD,
-      underlyingSymbol: "DAI",
-      yieldSymbol: "vaDAI",
-      image: "vaDAI.svg",
-      messages: [],
-      api: {
-        apr: getVesperApr,
-        yieldType: "APR",
-        provider: "vesper",
       },
       disabledDepositTokens: [],
     },/* 
@@ -182,21 +153,6 @@ export const VAULTS: VaultsConfig = {
         apr: getAaveApr,
         yieldType: "APR",
         provider: "aave",
-      },
-      disabledDepositTokens: [],
-    },
-    "0xd1C117319B3595fbc39b471AB1fd485629eb05F2": {
-      label: "Vesper vaETH",
-      synthAssetType: SYNTH_ASSETS.ALETH,
-      underlyingSymbol: "WETH",
-      yieldSymbol: "vaETH",
-      image: "vaETH.svg",
-      messages: [],
-      wethGateway: "0xA22a7ec2d82A471B1DAcC4B37345Cf428E76D67A",
-      api: {
-        apr: getVesperApr,
-        yieldType: "APR",
-        provider: "vesper",
       },
       disabledDepositTokens: [],
     },/* 

@@ -83,23 +83,23 @@ type DepositAsset = 'ETH' | 'WETH' | 'USDC' | 'USDT' | 'DAI';
 
 const TOKEN_ADDRESSES: { [key: string]: { [chainId: number]: `0x${string}` } } = {
     'ETH': {
-        1: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' as `0x${string}`, // WETH
+        1: '0x61134511187a9a2DF38D10DBe07Ba2e8E5563967' as `0x${string}`, // WETH
         10: '0x337B4B933d60F40CB57DD19AE834Af103F049810' as `0x${string}`, // WETH on Optimism
     },
     'WETH': {
-        1: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' as `0x${string}`,
+        1: '0x61134511187a9a2DF38D10DBe07Ba2e8E5563967' as `0x${string}`,
         10: '0x337B4B933d60F40CB57DD19AE834Af103F049810' as `0x${string}`,
     },
     'USDC': {
-        1: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48' as `0x${string}`,
+        1: '0xf591D878608e2e5c7D4f1E499330f4AB9BbaE37a' as `0x${string}`,
         10: '0x4186Eb285b1efdf372AC5896a08C346c7E373cC4' as `0x${string}`,
     },
     'USDT': {
-        1: '0xdAC17F958D2ee523a2206206994597C13D831ec7' as `0x${string}`,
+        1: '0xBC11De1F20e83F0a6889B8c7A7868E722694E315' as `0x${string}`,
         10: '0x2680b58945A31602E4B6122C965c2849Eb76Dd3B' as `0x${string}`,
     },
     'DAI': {
-        1: '0x6B175474E89094C44Da98b954EedeAC495271d0F' as `0x${string}`,
+        1: '0xcE4a49d7ed99C7c8746B713EE2f0C9aA631688d8' as `0x${string}`,
         10: '0x43A502D7e947c8A2eBBaf7627E104Ddcc253aBc6' as `0x${string}`,
     },
 };
