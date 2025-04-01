@@ -246,13 +246,13 @@ const App: React.FC = () => {
       const minAmount = parseFloat(minTopUpAmountInEUR);
       const maxAmount = parseFloat(maxTopUpAmountInEUR);
 
-      /*       if (isNaN(minAmount) || isNaN(maxAmount)) {
-              throw new Error('Invalid server settings. Please try again later.');
-            }
-      
-            if (amountInEUR < minAmount || amountInEUR > maxAmount) {
-              throw new Error(`Amount must be between ${minAmount} and ${maxAmount} EUR`);
-            } */
+      if (isNaN(minAmount) || isNaN(maxAmount)) {
+        throw new Error('Invalid server settings. Please try again later.');
+      }
+
+      if (amountInEUR < minAmount || amountInEUR > maxAmount) {
+        throw new Error(`Amount must be between ${minAmount} and ${maxAmount} EUR`);
+      }
 
       console.log('=== BORROW ONLY DETAILS ===');
       console.log('1. Final Amount:', finalAmount);
@@ -679,13 +679,13 @@ const App: React.FC = () => {
       const minAmount = parseFloat(minTopUpAmountInEUR);
       const maxAmount = parseFloat(maxTopUpAmountInEUR);
 
-      /*       if (isNaN(minAmount) || isNaN(maxAmount)) {
-              throw new Error('Invalid server settings. Please try again later.');
-            }
-      
-            if (amountInEUR < minAmount || amountInEUR > maxAmount) {
-              throw new Error(`Amount must be between ${minAmount} and ${maxAmount} EUR`);
-            } */
+      if (isNaN(minAmount) || isNaN(maxAmount)) {
+        throw new Error('Invalid server settings. Please try again later.');
+      }
+
+      if (amountInEUR < minAmount || amountInEUR > maxAmount) {
+        throw new Error(`Amount must be between ${minAmount} and ${maxAmount} EUR`);
+      }
 
       // Check if wallet is connected and chain is supported
       if (!publicClient || !walletClient || !chain || !address) {

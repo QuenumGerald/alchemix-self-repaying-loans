@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 import { WagmiProvider } from 'wagmi';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { optimism,mainnet,arbitrum } from 'wagmi/chains';
+import { optimism, mainnet } from 'wagmi/chains';
 import { darkTheme, getDefaultConfig, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { ThemeProvider } from '@mui/material/styles';
 import { Buffer } from 'buffer';
@@ -53,7 +53,7 @@ alchemixTheme.colors.connectButtonTextError = '##f5caa4';
 const config = getDefaultConfig({
   appName: 'ALchemix Holyheld Top-Up',
   projectId: import.meta.env.VITE_WC_PROJECT_ID,
-  chains: [optimism,mainnet,arbitrum]
+  chains: [optimism, mainnet]
 });
 
 // Client React Query
